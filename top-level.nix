@@ -2,7 +2,9 @@
   imports = [
     ./fetch-steam
     ./steamworks-sdk-redist
+    ./unreal-wrapper
     ./satisfactory-server
+    ./palworld-server
     ./eco-server
   ];
 
@@ -10,7 +12,9 @@
     overlays.default = lib.composeManyExtensions (with self.overlays; [
       fetch-steam
       steamworks-sdk-redist
+      unreal-wrapper
       satisfactory-server
+      palworld-server
       eco-server
     ]);
 
@@ -21,6 +25,7 @@
       pkg: builtins.elem (lib.getName pkg) [
         "steamworks-sdk-redist"
         "satisfactory-server"
+        "palworld-server"
         "eco-server"
       ];
   };

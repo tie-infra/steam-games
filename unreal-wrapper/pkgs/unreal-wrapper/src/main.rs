@@ -8,23 +8,25 @@ use std::os::unix::process::CommandExt;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
-const SATISFACTORY_ENGINE_SAVED: &str = "Engine/Saved";
-const SATISFACTORY_FACTORYGAME_SAVED: &str = "FactoryGame/Saved";
-
 #[derive(Parser, Debug)]
 struct Args {
-    /// Directory with Satisfactory server project root.
+    /// Directory with Unreal Engine dedicated server project root.
     #[clap(short, long, value_hint = ValueHint::DirPath)]
     project_root: PathBuf,
 
-    /// Path to the Satisfactory server executable.
+    /// Path to the Unreal Engine dedicated server executable.
     #[clap(short, long)]
     executable: PathBuf,
+
+    /// Paths to the directories under the project root where the Unreal Engine
+    /// dedicated server saves game state and configuration.
+    #[clap(short, long, value_hint = ValueHint::DirPath)]
+    saved_dirs: Vec<String>,
 
     #[clap(short, long, hide = true)]
     argv0: Option<String>,
 
-    /// Command-line arguments to pass to the Satisfactory server.
+    /// Command-line arguments to pass to the Unreal Engine dedicated server.
     #[clap(trailing_var_arg = true)]
     server_args: Vec<String>,
 }
@@ -34,13 +36,13 @@ fn main() -> Result<()> {
 
     let argv0 = args
         .argv0
-        .unwrap_or_else(|| std::env::args().next().unwrap_or("FactoryGame".to_string()));
+        .unwrap_or_else(|| std::env::args().next().unwrap_or("unreal-wrapper".to_string()));
 
     unshare_namespaces()?;
 
     prepare_project_root(
         &args.project_root,
-        &[SATISFACTORY_FACTORYGAME_SAVED, SATISFACTORY_ENGINE_SAVED],
+        &args.saved_dirs,
     )
     .context("Failed to bind state directories")?;
 
@@ -77,7 +79,7 @@ fn unshare_namespaces() -> Result<()> {
     Ok(())
 }
 
-fn prepare_project_root(project_root: &Path, dirs: &[&str]) -> Result<()> {
+fn prepare_project_root(project_root: &Path, dirs: &Vec<String>) -> Result<()> {
     for dir in dirs {
         create_dir_all(dir)?;
     }
