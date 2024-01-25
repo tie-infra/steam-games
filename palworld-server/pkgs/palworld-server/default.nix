@@ -16,14 +16,14 @@ let
 in
 stdenv.mkDerivation {
   pname = "palworld-server";
-  version = "unstable-2024-01-20";
+  version = "0.1.3.0";
 
   # See https://steamdb.info/app/2394010 for a list of manifest IDs.
   src = fetchSteam {
     inherit appId;
     depotId = "2394012";
-    manifestId = "4603741190199642564";
-    hash = "sha256-nFnrcRJEUtQpB5YAZAMCosA8xEKkmovz8QiFUcQBwEA=";
+    manifestId = "1354752814336157338";
+    hash = "sha256-Pu2vo+v4FOv5F/h2cgnvXqmp8Ev/gga0LB5cJiU+8tA=";
   };
 
   dontConfigure = true;
