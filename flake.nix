@@ -2,15 +2,10 @@
   description = "Steam games and game servers";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-23.11";
-    nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
-
-    systems.url = "systems";
+    nixpkgs.url = "nixpkgs/nixos-unstable";
 
     flake-parts.url = "flake-parts";
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
-
-    package-sets.url = "github:tie-infra/package-sets";
 
     # TODO: there are some minor incompatibilities between our current
     # implementation and steam-fetcher.
@@ -19,9 +14,12 @@
   };
 
   outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-    systems = import inputs.systems;
+    systems = [
+      "aarch64-linux"
+      "x86_64-linux"
+    ];
+
     imports = [
-      inputs.package-sets.flakeModule
       ./nixpkgs.nix
       ./top-level.nix
     ];

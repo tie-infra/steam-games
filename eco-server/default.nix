@@ -1,19 +1,9 @@
-{ lib, package-sets-lib, ... }:
-let
-  inherit (package-sets-lib)
-    concatFilteredPackages
-    availableOnHostPlatform;
-in
 {
-  flake.overlays.eco-server = final: prev: {
+  flake.overlays.eco-server = final: _: {
     eco-server = final.callPackage ./pkgs/eco-server { };
   };
 
-  perSystem = { config, ... }: {
-    checks = concatFilteredPackages availableOnHostPlatform
-      ({ name, pkgs, ... }: {
-        "eco-server-${name}" = pkgs.eco-server;
-      })
-      config.packageSets;
+  perSystem = { pkgsCross, ... }: {
+    packages.eco-server = pkgsCross.x86-64.eco-server;
   };
 }

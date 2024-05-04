@@ -1,5 +1,5 @@
 {
-  flake.overlays.fetch-steam = final: prev: {
+  flake.overlays.fetch-steam = final: _: {
     fetchSteam = final.callPackage ./pkgs/fetch-steam { };
   };
 }

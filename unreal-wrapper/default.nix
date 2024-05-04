@@ -1,19 +1,12 @@
-{ lib, package-sets-lib, ... }:
-let
-  inherit (package-sets-lib)
-    concatFilteredPackages
-    availableOnHostPlatform;
-in
 {
-  flake.overlays.unreal-wrapper = final: prev: {
+  flake.overlays.unreal-wrapper = final: _: {
     unreal-wrapper = final.callPackage ./pkgs/unreal-wrapper { };
   };
 
-  perSystem = { config, ... }: {
-    checks = concatFilteredPackages availableOnHostPlatform
-      ({ name, pkgs, ... }: {
-        "unreal-wrapper-${name}" = pkgs.unreal-wrapper;
-      })
-      config.packageSets;
+  perSystem = { pkgsCross, ... }: {
+    packages = {
+      unreal-wrapper-x86-64 = pkgsCross.x86-64.unreal-wrapper;
+      unreal-wrapper-x86 = pkgsCross.x86.unreal-wrapper;
+    };
   };
 }

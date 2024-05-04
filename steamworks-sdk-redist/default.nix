@@ -1,19 +1,12 @@
-{ lib, package-sets-lib, ... }:
-let
-  inherit (package-sets-lib)
-    concatFilteredPackages
-    availableOnHostPlatform;
-in
 {
   flake.overlays.steamworks-sdk-redist = final: prev: {
     steamworks-sdk-redist = final.callPackage ./pkgs/steamworks-sdk-redist { };
   };
 
-  perSystem = { config, ... }: {
-    checks = concatFilteredPackages availableOnHostPlatform
-      ({ name, pkgs, ... }: {
-        "steamworks-sdk-redist-${name}" = pkgs.steamworks-sdk-redist;
-      })
-      config.packageSets;
+  perSystem = { pkgsCross, ... }: {
+    packages = {
+      steamworks-sdk-redist-x86-64 = pkgsCross.x86-64.steamworks-sdk-redist;
+      steamworks-sdk-redist-x86 = pkgsCross.x86.steamworks-sdk-redist;
+    };
   };
 }

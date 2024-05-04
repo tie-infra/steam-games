@@ -30,8 +30,9 @@
       ];
   };
 
-  perSystem = { pkgs, ... }: {
+  perSystem = { self', pkgs, ... }: {
     formatter = pkgs.nixpkgs-fmt;
-    legacyPackages = pkgs;
+
+    checks = self'.packages;
   };
 }
