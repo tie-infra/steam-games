@@ -108,11 +108,5 @@ in
     platforms = with lib.systems.inspect.patterns; [
       (isLinux // isx86_64)
     ];
-
-    # Cross-compiling libgdiplus fails on stable Nixpkgs branch, so we are
-    # marking package as broken.
-    # TODO: remove once 23.11 is released.
-    # See also https://github.com/NixOS/nixpkgs/pull/236930
-    broken = stdenv.buildPlatform != stdenv.hostPlatform && lib.versionOlder libgdiplus.version "6.1";
   };
 })
