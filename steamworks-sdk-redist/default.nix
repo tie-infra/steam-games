@@ -1,5 +1,5 @@
 {
-  flake.overlays.steamworks-sdk-redist = final: prev: {
+  flake.overlays.steamworks-sdk-redist = final: _: {
     steamworks-sdk-redist = final.callPackage ./pkgs/steamworks-sdk-redist { };
   };
 

@@ -18,9 +18,9 @@
       eco-server
     ]);
 
-    # A function that returns `true` for unfree packages defined in this flake.
-    # Intended to be used in `config.allowUnfreePredicate` when evaluating
-    # Nixpkgs.
+    # A convenience function that returns `true` for unfree packages defined in
+    # this flake. Intended to be used in `config.allowUnfreePredicate` when
+    # evaluating Nixpkgs.
     lib.unfreePredicate =
       pkg: builtins.elem (lib.getName pkg) [
         "steamworks-sdk-redist"
@@ -30,9 +30,7 @@
       ];
   };
 
-  perSystem = { self', pkgs, ... }: {
-    formatter = pkgs.nixpkgs-fmt;
-
+  perSystem = { self', ... }: {
     checks = self'.packages;
   };
 }

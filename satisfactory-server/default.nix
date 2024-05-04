@@ -1,5 +1,5 @@
 {
-  flake.overlays.satisfactory-server = final: prev: {
+  flake.overlays.satisfactory-server = final: _: {
     satisfactory-server = final.callPackage ./pkgs/satisfactory-server { };
   };
 
