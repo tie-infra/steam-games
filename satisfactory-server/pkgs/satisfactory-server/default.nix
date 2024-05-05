@@ -72,12 +72,7 @@ stdenv.mkDerivation {
     maintainers = [ lib.maintainers.tie ];
     sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
     license = lib.licenses.unfree;
-    platforms = with lib.systems.inspect.patterns; [
-      (isLinux // isx86_64)
-    ];
-
-    # For some reason autoPatchelfHook does not list darwin in meta.platforms.
-    # TODO: needs investigation, this is really dumb.
-    broken = !lib.meta.availableOn stdenv.buildPlatform autoPatchelfHook;
+    platforms = [ "x86_64-linux" ];
+    badPlatforms = [{ hasSharedLibraries = false; }];
   };
 }

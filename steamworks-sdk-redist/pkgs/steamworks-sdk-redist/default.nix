@@ -33,9 +33,7 @@ stdenv.mkDerivation {
     maintainers = [ lib.maintainers.tie ];
     sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
     license = lib.licenses.unfree;
-    platforms = with lib.systems.inspect.patterns; [
-      (isLinux // isx86_32)
-      (isLinux // isx86_64)
-    ];
+    platforms = [ "i686-linux" "x86_64-linux" ];
+    badPlatforms = [{ hasSharedLibraries = false; }];
   };
 }
