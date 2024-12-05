@@ -5,15 +5,15 @@
 }:
 stdenv.mkDerivation {
   pname = "steamworks-sdk-redist";
-  version = "1.57";
+  version = "unstable-2024-05-30";
 
   # Steamworks SDK Redist with steamclient.so.
   # https://steamdb.info/app/1007/depots
   src = fetchSteam {
     appId = "1007";
     depotId = "1006";
-    manifestId = "6912453647411644579";
-    hash = "sha256-cj853Zk3dU0WICny3soTFppWkf8NJBp6C+Ywb96Yxcs=";
+    manifestId = "7138471031118904166";
+    hash = "sha256-OtPI1kAx6+9G09IEr2kYchyvxlPl3rzx/ai/xEVG4oM=";
   };
 
   dontConfigure = true;
@@ -23,7 +23,7 @@ stdenv.mkDerivation {
     runHook preInstall
 
     mkdir -p $out/lib
-    cp ${lib.optionalString (stdenv.hostPlatform.is64bit) "linux64/"}steamclient.so $out/lib
+    cp ${lib.optionalString stdenv.hostPlatform.is64bit "linux64/"}steamclient.so $out/lib
     chmod +x $out/lib/steamclient.so
 
     runHook postInstall
