@@ -11,20 +11,20 @@
 }:
 let
   projectRoot = "${placeholder "out"}/share/palworld-server";
-  serverFile = "${projectRoot}/Pal/Binaries/Linux/PalServer-Linux-Test";
+  serverFile = "${projectRoot}/Pal/Binaries/Linux/PalServer-Linux-Shipping";
 
   appId = "2394010";
 in
 stdenv.mkDerivation {
   pname = "palworld-server";
-  version = "0.1.4.0";
+  version = "0.3.12";
 
   # See https://steamdb.info/app/2394010 for a list of manifest IDs.
   src = fetchSteam {
     inherit appId;
     depotId = "2394012";
-    manifestId = "4190579964382773830";
-    hash = "sha256-f8cRdFesSInHrZicIOrwWW1j5bTng8Vq3eUs3MZ6dOE=";
+    manifestId = "4799126612816973970";
+    hash = "sha256-NPwsEJFFOdfZeUPklBAEtiQQX3zxPLcn0CAytbrqCIo=";
   };
 
   dontConfigure = true;
