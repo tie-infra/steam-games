@@ -12,14 +12,10 @@ lib.makeOverridable (
   , meta ? { }
   }@args:
   let
-    # Set meta.position similar to fetchFromGitHub.
-    position =
-      if args.meta.description or null != null
-      then builtins.unsafeGetAttrPos "description" args.meta
-      else builtins.unsafeGetAttrPos "appId" args;
-    newMeta = {
-      position = "${position.file}:${toString position.line}";
-    } // meta;
+    fileListArg =
+      if lib.isList fileList
+      then builtins.toFile "steam-files-list.txt" (lib.concatLines fileList)
+      else fileList;
 
     downloadArgs = [
       "-app"
@@ -33,25 +29,31 @@ lib.makeOverridable (
       branch
     ] ++ lib.optionals (fileList != null) [
       "-filelist"
-      fileList
-    ] ++ lib.optionals (debug) [
+      fileListArg
+    ] ++ lib.optionals debug [
       "-debug"
     ];
+
+    drvArgs = {
+      depsBuildBuild = [ depotdownloader ];
+
+      strictDeps = true;
+
+      outputHashAlgo = "sha256";
+      outputHashMode = "recursive";
+      outputHash = hash;
+
+      env.SSL_CERT_FILE = "${cacert}/etc/ssl/certs/ca-bundle.crt";
+
+      pos = builtins.unsafeGetAttrPos "manifestId" args;
+
+      inherit passthru;
+    } // lib.optionalAttrs (args ? meta) {
+      inherit meta;
+    };
   in
-  runCommand name
-  {
-    depsBuildBuild = [ depotdownloader ];
-
-    outputHashAlgo = "sha256";
-    outputHashMode = "recursive";
-    outputHash = hash;
-
-    inherit passthru;
-    meta = newMeta;
-  } ''
-    export HOME=$PWD
-    export SSL_CERT_FILE=${cacert}/etc/ssl/certs/ca-bundle.crt
-    DepotDownloader -dir $out ${lib.escapeShellArgs downloadArgs}
-    rm -r $out/.DepotDownloader
+  runCommand name drvArgs ''
+    HOME=$PWD DepotDownloader -dir "$out" ${lib.escapeShellArgs downloadArgs}
+    rm -r "$out"/.DepotDownloader
   ''
 )
