@@ -11,23 +11,23 @@
 }:
 let
   projectRoot = "${placeholder "out"}/share/satisfactory-server";
-  serverFile = "${projectRoot}/Engine/Binaries/Linux/UnrealServer-Linux-Shipping";
+  serverFile = "${projectRoot}/Engine/Binaries/Linux/FactoryServer-Linux-Shipping";
 
   appId = "1690800";
 in
 stdenv.mkDerivation {
   pname = "satisfactory-server";
-  # See Engine/Binaries/Linux/UnrealServer-Linux-Shipping.version for Unreal
+  # See Engine/Binaries/Linux/FactoryServer-Linux-Shipping.version for Unreal
   # Engine version and build ID.
   # Format: <gameVersion>-<engineVersion>-<buildID>
-  version = "0.8.3.3-5.2.1+273254";
+  version = "1.0.1.1-5.3.2+383233";
 
   # See https://steamdb.info/app/1690800 for a list of manifest IDs.
   src = fetchSteam {
     inherit appId;
     depotId = "1690802";
-    manifestId = "3834057001613892701";
-    hash = "sha256-LHE64JBPCG92agi6Q9w378UEsU/S05A0AoQWXM+IcSs=";
+    manifestId = "9200712923120761240";
+    hash = "sha256-UCvo8z7wufIO6IVHkNx/gQSNLWfbs3bIdiSaOTakVEw=";
   };
 
   dontConfigure = true;
