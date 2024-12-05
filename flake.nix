@@ -16,22 +16,24 @@
     #steam-fetcher.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-    systems = [
-      "aarch64-linux"
-      "x86_64-linux"
-    ];
+  outputs =
+    inputs:
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [
+        "aarch64-linux"
+        "x86_64-linux"
+      ];
 
-    imports = [
-      inputs.treefmt-nix.flakeModule
-      ./nixpkgs.nix
-      ./top-level.nix
-    ];
+      imports = [
+        inputs.treefmt-nix.flakeModule
+        ./nixpkgs.nix
+        ./top-level.nix
+      ];
 
-    perSystem.treefmt = {
-      projectRootFile = "flake.nix";
-      programs.deadnix.enable = true;
-      programs.nixpkgs-fmt.enable = true;
+      perSystem.treefmt = {
+        projectRootFile = "flake.nix";
+        programs.deadnix.enable = true;
+        programs.nixfmt-rfc-style.enable = true;
+      };
     };
-  };
 }

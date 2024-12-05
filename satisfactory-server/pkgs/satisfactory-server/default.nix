@@ -1,12 +1,13 @@
-{ lib
-, stdenv
-, fetchSteam
-, makeBinaryWrapper
-, autoPatchelfHook
-, gcc-unwrapped
-, steamworks-sdk-redist
-, xdg-user-dirs
-, unreal-wrapper
+{
+  lib,
+  stdenv,
+  fetchSteam,
+  makeBinaryWrapper,
+  autoPatchelfHook,
+  gcc-unwrapped,
+  steamworks-sdk-redist,
+  xdg-user-dirs,
+  unreal-wrapper,
 }:
 let
   projectRoot = "${placeholder "out"}/share/satisfactory-server";
@@ -32,7 +33,10 @@ stdenv.mkDerivation {
   dontConfigure = true;
   dontBuild = true;
 
-  nativeBuildInputs = [ autoPatchelfHook makeBinaryWrapper ];
+  nativeBuildInputs = [
+    autoPatchelfHook
+    makeBinaryWrapper
+  ];
   buildInputs = [ (lib.getLib gcc-unwrapped) ];
   appendRunpaths = [ "${steamworks-sdk-redist}/lib" ];
 
@@ -73,6 +77,6 @@ stdenv.mkDerivation {
     sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
     license = lib.licenses.unfree;
     platforms = [ "x86_64-linux" ];
-    badPlatforms = [{ hasSharedLibraries = false; }];
+    badPlatforms = [ { hasSharedLibraries = false; } ];
   };
 }

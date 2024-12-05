@@ -1,6 +1,7 @@
-{ lib
-, stdenv
-, fetchSteam
+{
+  lib,
+  stdenv,
+  fetchSteam,
 }:
 stdenv.mkDerivation {
   pname = "steamworks-sdk-redist";
@@ -33,7 +34,10 @@ stdenv.mkDerivation {
     maintainers = [ lib.maintainers.tie ];
     sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
     license = lib.licenses.unfree;
-    platforms = [ "i686-linux" "x86_64-linux" ];
-    badPlatforms = [{ hasSharedLibraries = false; }];
+    platforms = [
+      "i686-linux"
+      "x86_64-linux"
+    ];
+    badPlatforms = [ { hasSharedLibraries = false; } ];
   };
 }
