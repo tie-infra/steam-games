@@ -19,15 +19,15 @@ stdenv.mkDerivation {
   pname = "satisfactory-server";
   # See Engine/Binaries/Linux/FactoryServer-Linux-Shipping.version for Unreal
   # Engine version and build ID.
-  # Format: <gameVersion>-<engineVersion>-<buildID>
-  version = "1.0.1.1-5.3.2+383233";
+  # Format: <gameVersion>-<engineVersion>+<buildID>
+  version = "1.0.1.2-5.3.2+383729";
 
   # See https://steamdb.info/app/1690800 for a list of manifest IDs.
   src = fetchSteam {
     inherit appId;
     depotId = "1690802";
-    manifestId = "9200712923120761240";
-    hash = "sha256-UCvo8z7wufIO6IVHkNx/gQSNLWfbs3bIdiSaOTakVEw=";
+    manifestId = "7240677446020425967";
+    hash = "sha256-P8+s11TUX2TJ5vz5qfrGgsMJ7UfYwWeBw9owg8VuiEw=";
   };
 
   dontConfigure = true;
