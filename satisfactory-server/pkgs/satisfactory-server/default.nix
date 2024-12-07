@@ -52,6 +52,7 @@ stdenv.mkDerivation {
 
     # Mountpoints for wrapper.
     mkdir ${projectRoot}/{Engine,FactoryGame}/Saved
+    mkdir ${projectRoot}/FactoryGame/{Intermediate,Certificates}
 
     makeWrapper ${lib.getExe unreal-wrapper} $out/bin/satisfactory-server \
       --suffix PATH : ${lib.makeBinPath [ xdg-user-dirs ]} \
@@ -65,6 +66,10 @@ stdenv.mkDerivation {
       --add-flags Engine/Saved \
       --add-flags -s \
       --add-flags FactoryGame/Saved \
+      --add-flags -s \
+      --add-flags FactoryGame/Intermediate \
+      --add-flags -s \
+      --add-flags FactoryGame/Certificates \
       --add-flags FactoryGame
 
     runHook postInstall
