@@ -24,6 +24,11 @@ stdenv.mkDerivation (
     depot =
       {
         "x86_64-linux" = {
+          "0.11.1.13-beta-release-887" = {
+            depotId = "739595";
+            manifestId = "1206719259479720596";
+            hash = "sha256-u6LmQ2oN/RjoaHHMmp7ufgGtB8Biqk+dqUTzjWA9+RQ=";
+          };
           "0.11.1.11-beta-release-849" = {
             depotId = "739595";
             manifestId = "8766323330167359816";
@@ -45,7 +50,7 @@ stdenv.mkDerivation (
   in
   {
     pname = "eco-server";
-    version = "0.11.1.11-beta-release-849";
+    version = "0.11.1.13-beta-release-887";
 
     src = fetchSteam {
       inherit appId;

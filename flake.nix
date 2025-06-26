@@ -33,7 +33,7 @@
       perSystem.treefmt = {
         projectRootFile = "flake.nix";
         programs.deadnix.enable = true;
-        programs.nixfmt-rfc-style.enable = true;
+        programs.nixfmt.enable = true;
       };
     };
 }

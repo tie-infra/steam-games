@@ -18,14 +18,14 @@ in
 stdenv.mkDerivation {
   pname = "satisfactory-server";
   # See https://store.steampowered.com/news/app/526870?updates=true
-  version = "1.0.1.4";
+  version = "1.1.1.1";
 
   # See https://steamdb.info/app/1690800 for a list of manifest IDs.
   src = fetchSteam {
     inherit appId;
     depotId = "1690802";
-    manifestId = "6204133154971956314";
-    hash = "sha256-DeboG3ku37MhQZFj/Y0Hr+kU96Vj8l6DMzZj4Mn4src=";
+    manifestId = "6161411070368325930";
+    hash = "sha256-v4BCuR9MtlMfM+XM0jf5fcBrUieZpqx2ZSt3LgodvCU=";
   };
 
   dontConfigure = true;

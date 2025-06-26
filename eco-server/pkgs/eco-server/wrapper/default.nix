@@ -3,7 +3,7 @@ rustPlatform.buildRustPackage {
   name = "eco-server-wrapper";
   src = ./.;
 
-  cargoHash = "sha256-EfpUvckw6+pLxmECepNJgpyi22iT3J25MAmNv6xQIpg=";
+  cargoHash = "sha256-2Zo7kYvErmgqt3YvhelfbxDIuI0BGFRO8DGb+iTtHn0=";
 
   meta = {
     description = "Set up environment for Eco Server";
