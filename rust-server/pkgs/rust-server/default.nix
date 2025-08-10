@@ -87,7 +87,8 @@ stdenv.mkDerivation {
       --add-flags -s \
       --add-flags HarmonyMods \
       --add-flags -s \
-      --add-flags server
+      --add-flags server \
+      --add-flags --
 
     runHook postInstall
   '';
