@@ -87,8 +87,7 @@ stdenv.mkDerivation {
       --add-flags -s \
       --add-flags HarmonyMods \
       --add-flags -s \
-      --add-flags server \
-      --add-flags RustDedicated
+      --add-flags server
 
     runHook postInstall
   '';
