@@ -23,6 +23,10 @@ struct Args {
     #[clap(short, long, value_hint = ValueHint::DirPath)]
     saved_dirs: Vec<String>,
 
+    /// Whether to change current working directory to the project root.
+    #[clap(short, long)]
+    change_dir: bool,
+
     #[clap(short, long, hide = true)]
     argv0: Option<String>,
 
@@ -47,10 +51,13 @@ fn main() -> Result<()> {
     .context("Failed to bind state directories")?;
 
     let program = args.executable;
-    let err = Command::new(program.clone())
-        .arg0(argv0)
-        .args(args.server_args)
-        .exec();
+
+    let mut cmd = Command::new(program.clone());
+    cmd.arg0(argv0).args(args.server_args);
+    if args.change_dir {
+        cmd.current_dir(&args.project_root);
+    }
+    let err = cmd.exec();
 
     Err(err).context(format!("Failed to execute {}", program.to_string_lossy()))
 }

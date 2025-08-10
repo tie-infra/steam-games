@@ -7,6 +7,7 @@
     ./satisfactory-server
     ./palworld-server
     ./eco-server
+    ./rust-server
   ];
 
   flake = {
@@ -19,6 +20,7 @@
         satisfactory-server
         palworld-server
         eco-server
+        rust-server
       ]
     );
 
@@ -32,6 +34,7 @@
         "satisfactory-server"
         "palworld-server"
         "eco-server"
+        "rust-server"
       ];
   };
 

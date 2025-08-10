@@ -3,7 +3,7 @@ rustPlatform.buildRustPackage {
   name = "unreal-wrapper";
   src = ./.;
 
-  cargoHash = "sha256-Xn0NGLjADU9Sr8NecvvtAHsJ0StzhxOspjeb22f6xig=";
+  cargoLock.lockFile = ./Cargo.lock;
 
   meta = {
     description = "A wrapper that sets up environment for Unreal Engine dedicated servers";
