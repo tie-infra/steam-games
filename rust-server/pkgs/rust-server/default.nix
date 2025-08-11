@@ -1,6 +1,7 @@
 {
   lib,
   stdenv,
+  callPackage,
   fetchSteam,
   makeBinaryWrapper,
   autoPatchelfHook,
@@ -9,10 +10,9 @@
   xorg,
   alsa-lib,
   libpulseaudio,
-  unreal-wrapper,
 }:
 let
-  projectRoot = "${placeholder "out"}/share/rust-server";
+  serverDir = "${placeholder "out"}/share/rust-server";
 in
 stdenv.mkDerivation {
   pname = "rust-server";
@@ -35,7 +35,7 @@ stdenv.mkDerivation {
     })
   ];
 
-  inherit projectRoot;
+  inherit serverDir;
   __structuredAttrs = true;
 
   dontUnpack = true;
@@ -56,38 +56,31 @@ stdenv.mkDerivation {
   ];
 
   appendRunpaths = [
-    "${projectRoot}/RustDedicated_Data/Plugins"
-    "${projectRoot}/RustDedicated_Data/Plugins/x86_64"
+    "${serverDir}/RustDedicated_Data/Plugins"
+    "${serverDir}/RustDedicated_Data/Plugins/x86_64"
   ];
 
-  wrapper = lib.getExe unreal-wrapper;
+  wrapper = callPackage ./wrapper { };
 
   installPhase = ''
     runHook preInstall
 
-    mkdir -p -- "$projectRoot"
+    mkdir -p -- "$serverDir"
     for d in "''${srcs[@]}"; do
-      cp -r -T -- "$d" "$projectRoot"
+      cp -r -T -- "$d" "$serverDir"
     done
-    chmod -R +w -- "$projectRoot"
+    chmod -R +w -- "$serverDir"
 
-    rm -- "$projectRoot/runds.sh"
-    chmod +x -- "$projectRoot/RustDedicated"
+    rm -- "$serverDir/runds.sh"
+    chmod +x -- "$serverDir/RustDedicated"
 
     # Mountpoints for wrapper.
-    mkdir -- "$projectRoot"/{HarmonyMods,server}
+    mkdir -- "$serverDir"/{HarmonyMods,server}
 
-    makeWrapper "$wrapper" "$out/bin/rust-server" \
+    makeWrapper "$wrapper/bin/wrapper" "$out/bin/rust-server" \
       --inherit-argv0 \
-      --add-flags -c \
-      --add-flags -p \
-      --add-flags "$projectRoot" \
-      --add-flags -e \
-      --add-flags "$projectRoot/RustDedicated" \
       --add-flags -s \
-      --add-flags HarmonyMods \
-      --add-flags -s \
-      --add-flags server \
+      --add-flags "$serverDir" \
       --add-flags --
 
     runHook postInstall

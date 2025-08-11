@@ -1,2 +1,3 @@
-/ue-wrapper/pkgs/ue-wrapper/target
-/result
+target
+result
+result-*
