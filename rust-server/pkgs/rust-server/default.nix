@@ -16,17 +16,18 @@ let
 in
 stdenv.mkDerivation {
   pname = "rust-server";
-  version = "unstable-2025-08-10";
+  version = "unstable-2025-08-11";
 
-  # See https://steamdb.info/app/258550 for a list of manifest IDs.
+  # See https://steamdb.info/app/258550/depots/?branch=public for a list of manifest IDs.
   srcs = [
+    # rust dedicated - linux64
     (fetchSteam {
       appId = "258550";
       depotId = "258552";
-      manifestId = "8605191920159531309";
-      hash = "sha256-MPbIHrkOwiMg0yE9VLCriRllyQH/o+T8R3IkayHhAao=";
+      manifestId = "1337189175280118880";
+      hash = "sha256-pifRnA5o0vCB6vGH+xCvEecPXvw2t5rNDCum5LJaV0U=";
     })
-    # See https://steamdb.info/depot/258554 for a list of manifest IDs.
+    # rust dedicated - common
     (fetchSteam {
       appId = "258550";
       depotId = "258554";
