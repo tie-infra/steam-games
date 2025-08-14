@@ -13,6 +13,7 @@ static RUST_HARMONY_MODS_DIRECTORY: &str = "HarmonyMods";
 static RUST_SERVER_IDENTITY_DIRECTORY: &str = "server";
 static RUST_BUNDLES_DIRECTORY: &str = "Bundles";
 static RUST_CFG_DIRECTORY: &str = "cfg";
+static RUST_OXIDE_COMPILER_FILE: &str = "Oxide.Compiler";
 
 #[derive(Parser, Debug)]
 struct Args {
@@ -61,6 +62,7 @@ fn main() -> Result<()> {
     prepare_harmony_mods(&args.server_dir, &data_dir).context("Prepare harmony mods directory")?;
     prepare_bundles(&args.server_dir, &data_dir).context("Prepare bundles directory")?;
     prepare_cfg(&args.server_dir, &data_dir).context("Prepare cfg directory")?;
+    prepare_oxide_compiler(&args.server_dir, &data_dir).context("Prepare oxide compiler file")?;
 
     let program = args.server_dir.join(RUST_SERVER_FILE);
 
@@ -149,5 +151,24 @@ fn prepare_cfg(server_dir: &Path, data_dir: &Path) -> Result<()> {
         std::fs::set_permissions(entry.path(), permissions)?;
     }
 
+    Ok(())
+}
+
+fn prepare_oxide_compiler(server_dir: &Path, data_dir: &Path) -> Result<()> {
+    let source = server_dir.join(RUST_OXIDE_COMPILER_FILE);
+    if !std::fs::exists(&source)? {
+        return Ok(());
+    }
+    let target = data_dir.join(RUST_OXIDE_COMPILER_FILE);
+    create_file(&target)?;
+    mount_bind(&source, &target)?;
+    Ok(())
+}
+
+fn create_file(path: &Path) -> Result<()> {
+    let _ = std::fs::OpenOptions::new()
+        .append(true)
+        .create(true)
+        .open(path)?;
     Ok(())
 }

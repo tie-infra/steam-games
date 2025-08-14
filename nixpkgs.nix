@@ -9,6 +9,11 @@
         };
         overlays = [ self.overlays.default ];
         config.allowUnfreePredicate = self.lib.unfreePredicate;
+        config.permittedInsecurePackages = [
+          # For rust-server.oxide
+          "dotnet-sdk-7.0.410"
+          "dotnet-runtime-7.0.20"
+        ];
       };
 
       nixpkgsFun = newArgs: import inputs.nixpkgs (nixpkgsArgs // newArgs);
