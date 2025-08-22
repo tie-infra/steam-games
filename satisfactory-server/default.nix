@@ -1,8 +1,5 @@
 {
-  flake.overlays.satisfactory-server = final: _: {
-    satisfactory-server = final.callPackage ./pkgs/satisfactory-server { };
-  };
-
+  flake.overlays.satisfactory-server = import ./overlay.nix;
   perSystem =
     { pkgsCross, ... }:
     {

@@ -1,15 +1,13 @@
 { lib, rustPlatform }:
 rustPlatform.buildRustPackage {
-  name = "eco-server-wrapper";
+  name = "unreal-wrapper";
   src = ./.;
-
-  cargoHash = "sha256-2Zo7kYvErmgqt3YvhelfbxDIuI0BGFRO8DGb+iTtHn0=";
-
+  cargoLock.lockFile = ./Cargo.lock;
   meta = {
-    description = "Set up environment for Eco Server";
+    description = "Wrapper that sets up environment for Unreal Engine dedicated servers";
     license = lib.licenses.unlicense;
     maintainers = [ lib.maintainers.tie ];
     platforms = lib.platforms.linux;
-    mainProgram = "wrapper";
+    mainProgram = "unreal-wrapper";
   };
 }

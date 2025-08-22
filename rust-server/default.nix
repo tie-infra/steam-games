@@ -1,6 +1,5 @@
 {
-  flake.overlays.rust-server = final: _: { rust-server = final.callPackage ./pkgs/rust-server { }; };
-
+  flake.overlays.rust-server = import ./overlay.nix;
   perSystem =
     { pkgsCross, ... }:
     {

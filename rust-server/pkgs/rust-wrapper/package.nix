@@ -1,15 +1,13 @@
 { lib, rustPlatform }:
 rustPlatform.buildRustPackage {
-  name = "unreal-wrapper";
+  name = "rust-wrapper";
   src = ./.;
-
   cargoLock.lockFile = ./Cargo.lock;
-
   meta = {
-    description = "A wrapper that sets up environment for Unreal Engine dedicated servers";
+    description = "Wrapper that sets up environment for Rust dedicated servers";
     license = lib.licenses.unlicense;
     maintainers = [ lib.maintainers.tie ];
     platforms = lib.platforms.linux;
-    mainProgram = "unreal-wrapper";
+    mainProgram = "rust-wrapper";
   };
 }

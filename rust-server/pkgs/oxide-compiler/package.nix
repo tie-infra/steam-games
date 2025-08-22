@@ -29,6 +29,9 @@ buildDotnetModule rec {
   dotnetFlags = [
     "--property:Copyright=(c) 2013-2024 OxideMod"
     "--property:Version=${version}"
+    "--property:SelfContained=false"
+    "--property:PublishReadyToRun=false"
+    "--property:PublishSingleFile=false"
   ];
 
   meta = {

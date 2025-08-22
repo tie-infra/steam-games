@@ -1,7 +1,6 @@
 {
   lib,
   stdenv,
-  callPackage,
   fetchSteam,
   fetchzip,
   makeBinaryWrapper,
@@ -11,9 +10,12 @@
   xorg,
   alsa-lib,
   libpulseaudio,
+  rust-wrapper,
+  oxide-compiler,
 }:
 let
   serverDir = "${placeholder "out"}/share/rust-server";
+  extDir = "${serverDir}/RustDedicated_Data/Managed";
 in
 stdenv.mkDerivation (
   finalAttrs:
@@ -36,7 +38,7 @@ stdenv.mkDerivation (
   in
   {
     pname = "rust-server";
-    version = "unstable-2025-08-11";
+    version = "unstable-2025-08-18";
 
     # See https://steamdb.info/app/258550/depots/?branch=public for a list of manifest IDs.
     srcs =
@@ -45,28 +47,28 @@ stdenv.mkDerivation (
         (fetchSteam {
           appId = "258550";
           depotId = "258552";
-          manifestId = "3627494758718149740";
-          hash = "sha256-wGhz6X6b/tz0E1bqvS06lQ3hfwVzKtol1iyqLdzt9Os=";
+          manifestId = "8097379335522657357";
+          hash = "sha256-goAq05bzzvXH7+i0mcmQGXtT1KX3GgdY94DAokf74xA=";
         })
         # rust dedicated - common
         (fetchSteam {
           appId = "258550";
           depotId = "258554";
-          manifestId = "3006784168988183666";
-          hash = "sha256-RjmeabAkkG+Toluxrhq1u3sfNGx4AfsT2PTsF9N3sJE=";
+          manifestId = "1093051191186529217";
+          hash = "sha256-yfeOuICbopumNE9dW6tYzXjWgIuxInqs0l4EZziY9vw=";
         })
       ]
       ++ lib.optionals isOxide [
         (fetchzip {
-          url = "https://github.com/OxideMod/Oxide.Rust/releases/download/2.0.6547/Oxide.Rust-linux.zip";
-          hash = "sha256-XV4AfJnIqO7Makq1xvfPL029mJCD0qqcbZWr5ccRn6A=";
+          url = "https://github.com/OxideMod/Oxide.Rust/releases/download/2.0.6550/Oxide.Rust-linux.zip";
+          hash = "sha256-XkhNEhvDQmCDDYvRaG9pfiK1r609uOiYeUEH/h3fyYk=";
           stripRoot = false;
         })
       ];
 
-    oxideCompiler = lib.optionalDrvAttr isOxide (callPackage ./oxide-compiler { });
+    oxideCompiler = lib.optionalDrvAttr isOxide oxide-compiler;
 
-    inherit serverDir;
+    inherit serverDir extDir;
     __structuredAttrs = true;
 
     dontUnpack = true;
@@ -93,7 +95,7 @@ stdenv.mkDerivation (
 
     modLoader = null;
 
-    wrapper = callPackage ./wrapper { };
+    wrapper = rust-wrapper;
 
     installPhase =
       ''
@@ -107,7 +109,6 @@ stdenv.mkDerivation (
       ''
       + lib.optionalString isOxide ''
         ln -s -t "$serverDir" -- "$oxideCompiler/bin/Oxide.Compiler"
-        extDir=$serverDir/RustDedicated_Data/Managed
         # https://github.com/OxideMod/Oxide.SQLite/blob/fbd3f8edc4e30153e39941e114e15ac297f2f6a2/src/SQLiteExtension.cs#L53
         printf "<configuration>
         <dllmap dll=\"sqlite3\" target=\"$extDir/x86/libsqlite3.so\" os=\"!windows,osx\" cpu=\"x86\" />
@@ -126,7 +127,7 @@ stdenv.mkDerivation (
         # Mountpoints for wrapper.
         mkdir -- "$serverDir"/{HarmonyMods,server}
 
-        makeWrapper "$wrapper/bin/wrapper" "$out/bin/rust-server" \
+        makeWrapper "$wrapper/bin/rust-wrapper" "$out/bin/rust-server" \
           --inherit-argv0 \
           --add-flags -s \
           --add-flags "$serverDir" \

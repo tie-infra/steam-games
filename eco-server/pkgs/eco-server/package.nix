@@ -8,11 +8,11 @@
   libgdiplus,
   libkrb5,
   fetchSteam,
-  callPackage,
   makeBinaryWrapper,
+  eco-wrapper,
 }:
 let
-  wrapper = callPackage ./wrapper { };
+  projectRoot = "${placeholder "out"}/share/eco-server";
 in
 stdenv.mkDerivation (
   self:
@@ -65,32 +65,29 @@ stdenv.mkDerivation (
       makeBinaryWrapper
     ];
 
-    installPhase =
-      let
-        share = "share/eco-server";
-      in
-      ''
-        runHook preInstall
+    inherit projectRoot;
 
-        mkdir -p "$out/${share}"
-        cp -a . "$out/${share}"
+    wrapper = eco-wrapper;
 
-        pushd "$out/${share}"
-        chmod +x EcoServer
-        rmdir Storage
-        rm install.sh
-        rm EcoServerInTerminal.sh
-        mkdir WebClient/WebBin/Layers
-        popd
+    installPhase = ''
+      runHook preInstall
 
-        makeWrapper ${lib.getExe wrapper} "$out/bin/eco-server" \
-          --inherit-argv0 \
-          --add-flags -s \
-          --add-flags ${placeholder "out"}/${share} \
-          --add-flags --
+      rm -d Storage install.sh EcoServerInTerminal.sh
+      mkdir WebClient/WebBin/Layers
 
-        runHook postInstall
-      '';
+      mkdir -p -- "$projectRoot"
+      cp -r -T -- . "$projectRoot"
+
+      chmod +x -- "$projectRoot"/EcoServer
+
+      makeWrapper "$wrapper/bin/eco-wrapper" "$out/bin/eco-server" \
+        --inherit-argv0 \
+        --add-flags -s \
+        --add-flags "$projectRoot" \
+        --add-flags --
+
+      runHook postInstall
+    '';
 
     setRpath = lib.makeLibraryPath [
       stdenv.cc.cc # libstdc++.so.6, libgcc_s.so.1
@@ -113,10 +110,6 @@ stdenv.mkDerivation (
       runHook postFixup
     '';
 
-    passthru = {
-      inherit wrapper;
-    };
-
     # Note that Strage Loop Games provides paid Eco source code access, see
     # https://play.eco/buy
     meta = {
@@ -126,7 +119,7 @@ stdenv.mkDerivation (
       sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
       license = lib.licenses.unfree;
       platforms = [ "x86_64-linux" ];
-      badPlatforms = [ { hasSharedLibraries = false; } ];
+      mainProgram = "eco-server";
     };
   }
 )

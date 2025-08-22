@@ -11,7 +11,7 @@
 }:
 let
   projectRoot = "${placeholder "out"}/share/satisfactory-server";
-  serverFile = "${projectRoot}/Engine/Binaries/Linux/FactoryServer-Linux-Shipping";
+  serverFile = "Engine/Binaries/Linux/FactoryServer-Linux-Shipping";
 
   appId = "1690800";
 in
@@ -35,31 +35,41 @@ stdenv.mkDerivation {
     autoPatchelfHook
     makeBinaryWrapper
   ];
-  buildInputs = [ (lib.getLib gcc-unwrapped) ];
-  appendRunpaths = [ "${steamworks-sdk-redist}/lib" ];
+  buildInputs = [
+    (lib.getLib gcc-unwrapped)
+  ];
+  appendRunpaths = [
+    "${steamworks-sdk-redist}/lib"
+  ];
+
+  inherit projectRoot;
+
+  wrapper = unreal-wrapper;
+
+  binPath = lib.makeBinPath [ xdg-user-dirs ];
 
   installPhase = ''
     runHook preInstall
 
     rm FactoryServer.sh
 
-    mkdir -p ${projectRoot}
-    cp -r . ${projectRoot}
+    mkdir -p -- "$projectRoot"
+    cp -r -T -- . "$projectRoot"
 
-    chmod +x ${serverFile}
+    chmod +x -- "$projectRoot"/${serverFile}
 
     # Mountpoints for wrapper.
-    mkdir ${projectRoot}/{Engine,FactoryGame}/Saved
-    mkdir ${projectRoot}/FactoryGame/{Intermediate,Certificates}
+    mkdir -- "$projectRoot"/{Engine,FactoryGame}/Saved \
+      "$projectRoot"/FactoryGame/{Intermediate,Certificates}
 
-    makeWrapper ${lib.getExe unreal-wrapper} $out/bin/satisfactory-server \
-      --suffix PATH : ${lib.makeBinPath [ xdg-user-dirs ]} \
+    makeWrapper "$wrapper/bin/unreal-wrapper" "$out/bin/satisfactory-server" \
+      --suffix PATH : "$binPath" \
       --set-default SteamAppId ${appId} \
       --inherit-argv0 \
       --add-flags -p \
-      --add-flags ${projectRoot} \
+      --add-flags "$projectRoot" \
       --add-flags -e \
-      --add-flags ${serverFile} \
+      --add-flags "$projectRoot"/${serverFile} \
       --add-flags -s \
       --add-flags Engine/Saved \
       --add-flags -s \
@@ -80,6 +90,6 @@ stdenv.mkDerivation {
     sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
     license = lib.licenses.unfree;
     platforms = [ "x86_64-linux" ];
-    badPlatforms = [ { hasSharedLibraries = false; } ];
+    mainProgram = "satisfactory-server";
   };
 }

@@ -1,42 +1,48 @@
 { self, lib, ... }:
 {
   imports = [
+    ./eco-server
     ./fetch-steam
+    ./palworld-server
+    ./rust-server
+    ./satisfactory-server
     ./steamworks-sdk-redist
     ./unreal-wrapper
-    ./satisfactory-server
-    ./palworld-server
-    ./eco-server
-    ./rust-server
   ];
 
-  flake = {
-    overlays.default = lib.composeManyExtensions (
-      with self.overlays;
-      [
-        fetch-steam
-        steamworks-sdk-redist
-        unreal-wrapper
-        satisfactory-server
-        palworld-server
-        eco-server
-        rust-server
-      ]
-    );
-
-    # A convenience function that returns `true` for unfree packages defined in
-    # this flake. Intended to be used in `config.allowUnfreePredicate` when
-    # evaluating Nixpkgs.
-    lib.unfreePredicate =
-      pkg:
-      builtins.elem (lib.getName pkg) [
-        "steamworks-sdk-redist"
-        "satisfactory-server"
-        "palworld-server"
-        "eco-server"
-        "rust-server"
-      ];
+  flake.lib = import ./predicates.nix {
+    inherit lib;
   };
+
+  flake.overlays.default =
+    let
+      scope =
+        {
+          generateSplicesForMkScope,
+          makeScopeWithSplicing',
+          attributePathToSplice,
+        }:
+        makeScopeWithSplicing' {
+          otherSplices = generateSplicesForMkScope attributePathToSplice;
+          f = self: extension self { };
+        };
+      extension = lib.composeManyExtensions (
+        lib.attrValues (lib.removeAttrs self.overlays [ "default" ])
+      );
+    in
+    final: _: {
+      gameServerPackages = lib.recurseIntoAttrs (
+        final.callPackage scope {
+          attributePathToSplice = [ "gameServerPackages" ];
+        }
+      );
+      inherit (final.gameServerPackages)
+        eco-server
+        palworld-server
+        rust-server
+        satisfactory-server
+        ;
+    };
 
   perSystem =
     { self', ... }:

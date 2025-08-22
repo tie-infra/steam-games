@@ -1,14 +1,9 @@
 {
-  flake.overlays.steamworks-sdk-redist = final: _: {
-    steamworks-sdk-redist = final.callPackage ./pkgs/steamworks-sdk-redist { };
-  };
-
+  flake.overlays.steamworks-sdk-redist = import ./overlay.nix;
   perSystem =
     { pkgsCross, ... }:
     {
-      packages = {
-        steamworks-sdk-redist-x86-64 = pkgsCross.x86-64.steamworks-sdk-redist;
-        steamworks-sdk-redist-x86 = pkgsCross.x86.steamworks-sdk-redist;
-      };
+      packages.steamworks-sdk-redist-x86-64 = pkgsCross.x86-64.gameServerPackages.steamworks-sdk-redist;
+      packages.steamworks-sdk-redist-x86-32 = pkgsCross.x86-32.gameServerPackages.steamworks-sdk-redist;
     };
 }

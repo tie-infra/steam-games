@@ -1,8 +1,5 @@
 {
-  flake.overlays.palworld-server = final: _: {
-    palworld-server = final.callPackage ./pkgs/palworld-server { };
-  };
-
+  flake.overlays.palworld-server = import ./overlay.nix;
   perSystem =
     { pkgsCross, ... }:
     {

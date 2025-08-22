@@ -22,9 +22,9 @@ stdenv.mkDerivation {
   installPhase = ''
     runHook preInstall
 
-    mkdir -p $out/lib
-    cp ${lib.optionalString stdenv.hostPlatform.is64bit "linux64/"}steamclient.so $out/lib
-    chmod +x $out/lib/steamclient.so
+    mkdir -p -- "$out/lib"
+    cp -t "$out/lib" ${lib.optionalString stdenv.hostPlatform.is64bit "linux64/"}steamclient.so
+    chmod +x -- "$out/lib/steamclient.so"
 
     runHook postInstall
   '';
@@ -38,6 +38,5 @@ stdenv.mkDerivation {
       "i686-linux"
       "x86_64-linux"
     ];
-    badPlatforms = [ { hasSharedLibraries = false; } ];
   };
 }

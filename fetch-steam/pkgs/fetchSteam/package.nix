@@ -41,7 +41,9 @@ lib.makeOverridable (
         "-filelist"
         fileListArg
       ]
-      ++ lib.optionals debug [ "-debug" ];
+      ++ lib.optionals debug [
+        "-debug"
+      ];
 
     drvArgs = {
       depsBuildBuild = [ depotdownloader ];
@@ -52,6 +54,9 @@ lib.makeOverridable (
       outputHashMode = "recursive";
       outputHash = hash;
 
+      __structuredAttrs = true;
+      inherit downloadArgs;
+
       env.SSL_CERT_FILE = "${cacert}/etc/ssl/certs/ca-bundle.crt";
 
       pos = builtins.unsafeGetAttrPos "manifestId" args;
@@ -60,7 +65,7 @@ lib.makeOverridable (
     } // lib.optionalAttrs (args ? meta) { inherit meta; };
   in
   runCommand name drvArgs ''
-    HOME=$PWD DepotDownloader -dir "$out" ${lib.escapeShellArgs downloadArgs}
+    HOME=$PWD DepotDownloader -dir "$out" "''${downloadArgs[@]}"
     rm -r "$out"/.DepotDownloader
   ''
 )

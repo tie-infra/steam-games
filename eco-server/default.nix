@@ -1,6 +1,5 @@
 {
-  flake.overlays.eco-server = final: _: { eco-server = final.callPackage ./pkgs/eco-server { }; };
-
+  flake.overlays.eco-server = import ./overlay.nix;
   perSystem =
     { pkgsCross, ... }:
     {

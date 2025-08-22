@@ -1,5 +1,5 @@
 [package]
-name = "wrapper"
+name = "eco-wrapper"
 version = "0.1.0"
 edition = "2021"
 
