@@ -10,6 +10,7 @@ use std::process::Command;
 
 static RUST_SERVER_FILE: &str = "RustDedicated";
 static RUST_HARMONY_MODS_DIRECTORY: &str = "HarmonyMods";
+static RUST_HARMONY_LOG_FILE: &str = "harmony_log.txt";
 static RUST_SERVER_IDENTITY_DIRECTORY: &str = "server";
 static RUST_BUNDLES_DIRECTORY: &str = "Bundles";
 static RUST_CFG_DIRECTORY: &str = "cfg";
@@ -59,7 +60,7 @@ fn main() -> Result<()> {
     unshare_namespaces()?;
     prepare_server_identity(&args.server_dir, &data_dir)
         .context("Prepare server identity directory")?;
-    prepare_harmony_mods(&args.server_dir, &data_dir).context("Prepare harmony mods directory")?;
+    prepare_harmony(&args.server_dir, &data_dir).context("Prepare harmony bindings")?;
     prepare_bundles(&args.server_dir, &data_dir).context("Prepare bundles directory")?;
     prepare_cfg(&args.server_dir, &data_dir).context("Prepare cfg directory")?;
     prepare_oxide_compiler(&args.server_dir, &data_dir).context("Prepare oxide compiler file")?;
@@ -107,10 +108,24 @@ fn prepare_server_identity(server_dir: &Path, data_dir: &Path) -> Result<()> {
     Ok(())
 }
 
+fn prepare_harmony(server_dir: &Path, data_dir: &Path) -> Result<()> {
+    prepare_harmony_mods(server_dir, data_dir)?;
+    prepare_harmony_log(server_dir, data_dir)?;
+    Ok(())
+}
+
 fn prepare_harmony_mods(server_dir: &Path, data_dir: &Path) -> Result<()> {
     let source = data_dir.join(RUST_HARMONY_MODS_DIRECTORY);
     let target = server_dir.join(RUST_HARMONY_MODS_DIRECTORY);
     create_dir_all(&source)?;
+    mount_bind(&source, &target)?;
+    Ok(())
+}
+
+fn prepare_harmony_log(server_dir: &Path, data_dir: &Path) -> Result<()> {
+    let source = data_dir.join(RUST_HARMONY_LOG_FILE);
+    let target = server_dir.join(RUST_HARMONY_LOG_FILE);
+    create_file(&source)?;
     mount_bind(&source, &target)?;
     Ok(())
 }

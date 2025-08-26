@@ -126,6 +126,7 @@ stdenv.mkDerivation (
 
         # Mountpoints for wrapper.
         mkdir -- "$serverDir"/{HarmonyMods,server}
+        touch -- "$serverDir"/harmony_log.txt
 
         makeWrapper "$wrapper/bin/rust-wrapper" "$out/bin/rust-server" \
           --inherit-argv0 \
