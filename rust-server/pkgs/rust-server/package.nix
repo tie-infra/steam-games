@@ -38,7 +38,7 @@ stdenv.mkDerivation (
   in
   {
     pname = "rust-server";
-    version = "unstable-2025-08-18";
+    version = "unstable-2025-09-04";
 
     # See https://steamdb.info/app/258550/depots/?branch=public for a list of manifest IDs.
     srcs =
@@ -47,21 +47,21 @@ stdenv.mkDerivation (
         (fetchSteam {
           appId = "258550";
           depotId = "258552";
-          manifestId = "8097379335522657357";
-          hash = "sha256-goAq05bzzvXH7+i0mcmQGXtT1KX3GgdY94DAokf74xA=";
+          manifestId = "3161955800829155591";
+          hash = "sha256-63ipT8aO524ZjLmIjXV8FCofsyPDKkJy6J4+h1yZw64=";
         })
         # rust dedicated - common
         (fetchSteam {
           appId = "258550";
           depotId = "258554";
-          manifestId = "1093051191186529217";
-          hash = "sha256-yfeOuICbopumNE9dW6tYzXjWgIuxInqs0l4EZziY9vw=";
+          manifestId = "6448862942665312066";
+          hash = "sha256-BGEPQdgbImCdb/rxKxtON4HscYxZ0AjKe18T8nF7NZo=";
         })
       ]
       ++ lib.optionals isOxide [
         (fetchzip {
-          url = "https://github.com/OxideMod/Oxide.Rust/releases/download/2.0.6550/Oxide.Rust-linux.zip";
-          hash = "sha256-XkhNEhvDQmCDDYvRaG9pfiK1r609uOiYeUEH/h3fyYk=";
+          url = "https://github.com/OxideMod/Oxide.Rust/releases/download/2.0.6573/Oxide.Rust-linux.zip";
+          hash = "sha256-NV3XKZ2QP/f01hO9RhHrV9FH4EPzFYbJrdXBw7y9QnA=";
           stripRoot = false;
         })
       ];
